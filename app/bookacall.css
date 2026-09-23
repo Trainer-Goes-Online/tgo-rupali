@@ -1,0 +1,371 @@
+/* ════════════════════════════════════════════════════════════════
+   TGO-RUPALI · bookacall.css  ·  scope: .rn-book
+
+   The VSL blueprint's sixth surface, loaded only by /book-a-call.
+
+   A SINGLE CENTRED COLUMN, not a calendar beside a sidebar. The calendar
+   is the only action on the page, so nothing sits next to it competing
+   for the eye and everything else stacks underneath in the order that
+   walks a paid buyer to a booked one.
+
+   TOKEN-ONLY. The calendar renders inside Cal's own iframe, so its type
+   and chrome are Cal's: the page frames the embed, it never restyles it.
+================================================================ */
+
+.rn-book,
+.rn-book *,
+.rn-book *::before,
+.rn-book *::after { box-sizing: border-box; }
+
+.rn-book {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--fb);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.rn-book .wrap { max-width: 860px; margin: 0 auto; padding: 0 22px; width: 100%; }
+.rn-book .bk-body { flex: 1; padding: 0 0 68px; }
+
+/* ── 1 · confirmation strip ───────────────────────────────────── */
+.rn-book .bk-strip {
+  background: var(--bg-dark); color: var(--ink-dark);
+  font-family: var(--fb); font-size: 11px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  text-align: center; padding: 11px 18px;
+  display: flex; align-items: center; justify-content: center;
+  flex-wrap: wrap; gap: 8px;
+}
+.rn-book .bk-strip-tick { color: var(--brand-bright); }
+.rn-book .bk-strip-sep { opacity: .45; }
+
+/* ── 2 · step dots ────────────────────────────────────────────── */
+.rn-book .bk-steps {
+  list-style: none; margin: 30px 0 22px; padding: 0;
+  display: flex; align-items: center; justify-content: center; gap: 0;
+}
+.rn-book .bk-steps li {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--fb); font-size: 11px; font-weight: 700;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--muted);
+}
+.rn-book .bk-steps li.now { color: var(--ink); }
+/* the connector is the gap between the two steps, drawn rather than boxed */
+.rn-book .bk-steps li + li::before {
+  content: ""; width: 46px; height: 1px; background: var(--border-strong);
+  margin: 0 14px;
+}
+.rn-book .bk-dot {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 11px; letter-spacing: 0;
+}
+.rn-book .bk-steps li.done .bk-dot { background: var(--brand-deep); color: var(--ink-dark); }
+.rn-book .bk-steps li.now .bk-dot { background: var(--action); color: var(--cta-ink); font-weight: 700; }
+
+/* ── 3 · masthead ─────────────────────────────────────────────── */
+.rn-book .bk-mast { text-align: center; margin: 0 auto 32px; max-width: 700px; }
+.rn-book .bk-pill {
+  display: inline-block;
+  font-family: var(--fb); font-size: 10.5px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--brand-deep); background: var(--brand-fill);
+  border: 1px solid var(--brand-ring);
+  border-radius: 999px; padding: 7px 15px; margin-bottom: 18px;
+}
+.rn-book .bk-mast h1 {
+  font-family: var(--fh); text-transform: uppercase; font-weight: var(--fh-weight);
+  font-size: clamp(32px, 5vw, 52px); line-height: 1.06; letter-spacing: .02em;
+  color: var(--ink); margin: 0 0 14px; text-wrap: balance;
+}
+.rn-book .bk-mast h1 em { font-style: normal; color: var(--accent-word); }
+.rn-book .bk-deck {
+  font-size: 15.5px; line-height: 1.7; color: var(--ink-soft);
+  margin: 0 auto; max-width: 540px;
+}
+
+/* ── 4 · the calendar card ────────────────────────────────────── */
+.rn-book .bk-card {
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-card);
+  padding: 22px;
+  scroll-margin-top: 18px;
+}
+.rn-book .bk-card-head { margin-bottom: 16px; }
+.rn-book .bk-card-head h2 {
+  font-family: var(--fh); text-transform: uppercase; font-weight: var(--fh-weight);
+  font-size: 26px; line-height: 1.2; letter-spacing: .02em;
+  color: var(--ink); margin: 0 0 4px;
+}
+.rn-book .bk-card-head p { font-size: 13.5px; color: var(--ink-soft); margin: 0; }
+
+/* the embed sits on a neutral LIGHT inset inside the card: the brand frames
+   the third-party UI, it does not try to repaint it */
+.rn-book .bk-cal-inset {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  min-height: 560px;
+}
+.rn-book .bk-cal {
+  /* Cal's own snippet ships width:100%;height:100%;overflow:scroll on the
+     mount point. height:100% would collapse here (no sized parent), so the
+     inset holds the height and this scrolls inside it. */
+  width: 100%; min-height: 560px; overflow: auto;
+}
+.rn-book .bk-cal iframe { width: 100%; border: 0; display: block; }
+
+/* ── THE DESKTOP BREAKOUT ─────────────────────────────────────────────
+   Cal lays itself out from the width it is GIVEN, not from the viewport.
+   .wrap is 860px, and after its padding and the card's the embed gets about
+   770px, below the threshold for Cal's wide layout, so it falls back to the
+   stacked one and reads as a phone view dropped into the page.
+
+   The calendar therefore breaks OUT of the measure while the heading above
+   keeps it. min() clamps to the viewport less a 48px gutter and the pull-left
+   is derived from the same value, so it cannot overflow. */
+@media (min-width: 1080px) {
+  .rn-book .bk-wide {
+    --bk-wide-w: min(1140px, calc(100vw - 48px));
+    width: var(--bk-wide-w);
+    margin-left: calc(50% - var(--bk-wide-w) / 2);
+  }
+}
+
+.rn-book .bk-cal-note {
+  font-family: var(--fb); font-size: 11.5px; font-weight: 600; letter-spacing: .06em;
+  color: var(--muted); text-align: center; padding: 26px 16px 0; margin: 0;
+}
+/* failure and unset speak in the open-item register, not a red error: nothing
+   has gone wrong with their payment, only with an embed */
+.rn-book .bk-cal-note.failed,
+.rn-book .bk-cal-note.unset {
+  font-family: var(--fb); font-size: 14px; font-weight: 400; line-height: 1.6; letter-spacing: 0;
+  color: var(--ink); text-align: left;
+  background: var(--action-fill);
+  border-left: 4px solid var(--action-deep);
+  padding: 14px 16px; margin: 14px;
+  border-radius: var(--r-sm);
+}
+.rn-book .bk-direct {
+  font-size: 13px; color: var(--ink-soft); text-align: center;
+  padding: 14px 8px 0; margin: 0;
+}
+.rn-book .bk-direct a { color: var(--brand-text); border-bottom: 1px solid var(--border-strong); }
+.rn-book .bk-direct a:hover { border-bottom-color: var(--brand-text); }
+
+/* three reassurances, inside the card, under the embed */
+.rn-book .bk-reassure {
+  list-style: none; margin: 18px 0 0; padding: 16px 0 0;
+  border-top: 1px solid var(--border-strong);
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.rn-book .bk-reassure li {
+  display: flex; gap: 9px; font-size: 13px; line-height: 1.55; color: var(--ink-soft);
+}
+.rn-book .bk-reassure b { color: var(--ink); font-weight: 700; }
+.rn-book .bk-check {
+  flex: 0 0 16px; width: 16px; height: 16px; border-radius: 50%;
+  background: var(--brand-fill); color: var(--brand-deep);
+  display: grid; place-items: center; font-size: 10px; margin-top: 2px;
+}
+
+/* ── 4b · THE SLOT FALLBACK ───────────────────────────────────────────
+   A DARK BAND below the calendar card, not a strip inside it. It only
+   speaks to the reader the grid could not serve, and folding it in would
+   put a "cannot find a time?" message in front of everyone who just found
+   one. Dropping to the forest band separates "the calendar" from "what to
+   do when the calendar fails", which is the whole point of it. */
+.rn-book .bk-rescue {
+  margin-top: 20px; padding: 34px 28px 30px;
+  background: var(--bg-dark-alt);
+  border: 1px solid var(--border-dark-strong);
+  border-radius: var(--r-xl);
+  text-align: center;
+}
+.rn-book .bk-rescue-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 16px; border-radius: 999px;
+  border: 1px solid rgba(var(--brand-bright-rgb), .40);
+  background: rgba(var(--brand-bright-rgb), .12);
+  font-family: var(--fb); font-size: 10.5px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase; line-height: 1;
+  color: var(--brand-bright);
+}
+.rn-book .bk-rescue-eyebrow svg { flex: 0 0 auto; }
+
+.rn-book .bk-rescue h2 {
+  font-family: var(--fh); text-transform: uppercase; font-weight: var(--fh-weight);
+  font-size: clamp(24px, 3vw, 32px); line-height: 1.16; letter-spacing: .02em;
+  color: var(--ink-dark); margin: 16px 0 0; text-wrap: balance;
+}
+.rn-book .bk-rescue > p {
+  max-width: 54ch; margin: 12px auto 0;
+  font-size: 14px; line-height: 1.7; color: var(--ink-dark-soft);
+}
+.rn-book .bk-rescue strong { color: var(--ink-dark); font-weight: 700; }
+
+.rn-book .bk-rescue-acts {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 22px;
+}
+.rn-book .bk-rescue-acts a {
+  display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+  padding: 13px 22px; border-radius: 999px;
+  font-family: var(--fb); font-size: 14px; font-weight: 700;
+}
+/* WhatsApp keeps its own green. It is a destination the reader recognises by
+   colour, and a raspberry button here would claim to be this page's primary
+   action, which is and stays the calendar. */
+.rn-book .bk-rescue-wa { background: #1FA855; color: #fff; }
+.rn-book .bk-rescue-wa:hover { background: #1B9349; }
+.rn-book .bk-rescue-mail {
+  background: transparent; color: var(--ink-dark);
+  border: 1px solid var(--border-dark-strong);
+}
+.rn-book .bk-rescue-mail:hover { border-color: var(--brand-bright); color: var(--brand-bright); }
+
+.rn-book .bk-rescue-direct {
+  margin: 18px 0 0; font-family: var(--fb); font-size: 12.5px; color: var(--muted-dark);
+}
+.rn-book .bk-rescue-direct a { color: var(--brand-bright); }
+.rn-book .bk-rescue-direct a:hover { border-bottom: 1px solid var(--brand-bright); }
+
+@media (max-width: 560px) {
+  .rn-book .bk-rescue { padding: 26px 18px 24px; }
+  .rn-book .bk-rescue-acts { gap: 10px; }
+  .rn-book .bk-rescue-acts a { flex: 1 1 100%; }
+}
+
+/* ── 5 · section headings shared below the card ───────────────── */
+.rn-book .bk-h2 {
+  font-family: var(--fh); text-transform: uppercase; font-weight: var(--fh-weight);
+  font-size: clamp(26px, 3.4vw, 38px); line-height: 1.16; letter-spacing: .02em;
+  color: var(--ink); text-align: center; margin: 58px 0 8px; text-wrap: balance;
+}
+.rn-book .bk-h2 em { font-style: normal; color: var(--accent-word); }
+.rn-book .bk-h2-sub {
+  text-align: center; font-size: 14px; color: var(--ink-soft); margin: 0 0 26px;
+}
+
+/* ── 6 · the button ───────────────────────────────────────────── */
+.rn-book .bk-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--grad-cta); color: var(--cta-ink);
+  font-family: var(--fh); text-transform: uppercase; font-weight: var(--fh-weight);
+  font-size: 17px; letter-spacing: .05em;
+  padding: 15px 30px 13px; border-radius: 999px;
+  box-shadow: var(--glow-cta), var(--inset-hi);
+  transition: filter .2s, box-shadow .2s, transform .2s;
+}
+.rn-book .bk-btn:hover { filter: brightness(1.05); box-shadow: var(--glow-cta-hover); transform: translateY(-1px); }
+.rn-book .bk-btn:focus-visible { outline: 2px solid var(--brand-deep); outline-offset: 3px; }
+.rn-book .bk-btn.lg { font-size: 19px; padding: 17px 34px 15px; }
+.rn-book .bk-mid-cta { text-align: center; margin-top: 26px; }
+
+/* ── 7 · what to have ready ───────────────────────────────────── */
+.rn-book .bk-value {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.rn-book .bk-value li {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 20px 18px;
+  box-shadow: var(--shadow-card);
+}
+.rn-book .bk-ord {
+  display: inline-block;
+  font-family: var(--fb); font-size: 11px; font-weight: 700; letter-spacing: .12em;
+  color: var(--cta-ink); background: var(--action);
+  border-radius: var(--r-sm); padding: 3px 8px; margin-bottom: 12px;
+}
+.rn-book .bk-value h3 {
+  font-family: var(--fh); text-transform: uppercase; font-weight: var(--fh-weight);
+  font-size: 21px; line-height: 1.2; letter-spacing: .02em;
+  color: var(--ink); margin: 0 0 8px;
+}
+.rn-book .bk-value p { font-size: 13.5px; line-height: 1.65; color: var(--ink-soft); margin: 0; }
+
+/* ── 8 · the nudge ────────────────────────────────────────────── */
+.rn-book .bk-nudge {
+  margin-top: 46px; text-align: center;
+  background: var(--brand-fill);
+  border: 1px solid var(--brand-ring);
+  border-radius: var(--r-lg);
+  padding: 34px 26px;
+}
+.rn-book .bk-nudge h2 {
+  font-family: var(--fh); text-transform: uppercase; font-weight: var(--fh-weight);
+  font-size: clamp(24px, 3.2vw, 34px); line-height: 1.16; letter-spacing: .02em;
+  color: var(--ink); margin: 0 0 12px; text-wrap: balance;
+}
+.rn-book .bk-nudge h2 em { font-style: normal; color: var(--accent-word); }
+.rn-book .bk-nudge p {
+  font-size: 15px; line-height: 1.7; color: var(--ink-soft);
+  max-width: 520px; margin: 0 auto 22px;
+}
+
+/* ── 9 · objections ───────────────────────────────────────────── */
+.rn-book .bk-faq { display: flex; flex-direction: column; gap: 10px; }
+.rn-book .bk-faq details {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r); overflow: hidden;
+}
+.rn-book .bk-faq details[open] { border-color: var(--brand-ring); }
+.rn-book .bk-faq summary {
+  cursor: pointer; list-style: none;
+  padding: 16px 18px; font-size: 15px; font-weight: 700; color: var(--ink);
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+}
+.rn-book .bk-faq summary::-webkit-details-marker { display: none; }
+.rn-book .bk-faq summary::after {
+  content: "+"; font-family: var(--fb); color: var(--brand); font-size: 19px; line-height: 1;
+}
+.rn-book .bk-faq details[open] summary::after { content: "–"; }
+.rn-book .bk-faq summary:focus-visible { outline: 2px solid var(--action); outline-offset: -3px; }
+.rn-book .bk-faq p {
+  padding: 0 18px 18px; margin: 0;
+  font-size: 14px; line-height: 1.75; color: var(--ink-soft);
+}
+
+/* ── 10 · closing card ────────────────────────────────────────── */
+.rn-book .bk-final {
+  margin-top: 46px; text-align: center;
+  background: var(--bg-dark); color: var(--ink-dark);
+  border-radius: var(--r-lg);
+  padding: 40px 26px;
+}
+.rn-book .bk-final h2 {
+  font-family: var(--fh); text-transform: uppercase; font-weight: var(--fh-weight);
+  font-size: clamp(28px, 3.6vw, 40px); line-height: 1.12; letter-spacing: .02em;
+  color: var(--ink-dark); margin: 0 0 10px;
+}
+.rn-book .bk-final h2 em { font-style: normal; color: var(--brand-bright); }
+.rn-book .bk-final p { font-size: 15px; color: var(--ink-dark-soft); margin: 0 0 24px; }
+
+.rn-book .bk-help {
+  text-align: center; font-size: 13px; color: var(--ink-soft);
+  margin: 30px 0 0;
+}
+.rn-book .bk-help a { color: var(--brand-text); overflow-wrap: anywhere; }
+.rn-book .bk-help a:hover { border-bottom: 1px solid var(--brand-text); }
+
+/* ── responsive ───────────────────────────────────────────────── */
+@media (max-width: 780px) {
+  .rn-book .bk-reassure { grid-template-columns: 1fr; gap: 12px; }
+  .rn-book .bk-value { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .rn-book .bk-strip { font-size: 10px; letter-spacing: .08em; gap: 6px; padding: 10px 14px; }
+  .rn-book .bk-steps { margin: 22px 0 18px; }
+  .rn-book .bk-steps li + li::before { width: 26px; margin: 0 9px; }
+  .rn-book .bk-steps li { font-size: 10px; letter-spacing: .08em; }
+  .rn-book .bk-card { padding: 14px; }
+  .rn-book .bk-h2 { margin-top: 44px; }
+  .rn-book .bk-final { padding: 32px 20px; }
+}

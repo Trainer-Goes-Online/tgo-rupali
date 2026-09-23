@@ -1,0 +1,105 @@
+/* ════════════════════════════════════════════════════════════════
+   TGO-RUPALI · footer.css  ·  scope: .rn-foot
+
+   The VSL blueprint's shared footer, in its own stylesheet imported by
+   app/layout.tsx so it loads on EVERY route. A shared component whose CSS
+   ships with one route renders unstyled on the others (skin PART 3 law 3).
+   It is not folded into globals.css because that file is SHAPE's.
+
+   Token-only, so it re-themes with PART 1.
+
+   SPECIFICITY IS DELIBERATE. Every rule is (0,2,x): `.rn-foot .rn-foot-x`,
+   never a bare `p` or `a`. On the landing page this renders inside
+   .sdp-root, where `.sdp-root p` and `.sdp-root a` are (0,1,1) and carry
+   LIGHT band colours, while this footer sits on a forest-dark band. A bare
+   selector here would tie or lose and paint the merchant details nearly
+   invisible.
+================================================================ */
+
+.rn-foot {
+  background: var(--bg-dark);
+  border-top: 1px solid var(--border-dark);
+  padding: 38px 0 34px;
+  text-align: center;
+}
+.rn-foot .rn-foot-wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 22px;
+}
+
+/* The merchant block. Four facts a gateway reviewer reads in one pass, so
+   the leading is generous and nothing here is decoration. */
+.rn-foot .rn-foot-lines {
+  font-family: var(--fb);
+  font-size: 13px;
+  line-height: 1.85;
+  color: var(--muted-dark);
+  margin: 0 0 18px;
+}
+.rn-foot .rn-foot-lines .rn-foot-entity {
+  color: var(--ink-dark-soft);
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+.rn-foot .rn-foot-lines a {
+  color: var(--brand-bright);
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s;
+}
+.rn-foot .rn-foot-lines a:hover { border-bottom-color: var(--brand-bright); }
+.rn-foot .rn-foot-lines a:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
+.rn-foot .rn-foot-sep { color: var(--border-dark-strong); margin: 0 9px; }
+
+.rn-foot .rn-foot-links {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 10px 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-dark);
+}
+.rn-foot .rn-foot-links a {
+  font-family: var(--fb);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-dark-soft);
+  border-bottom: 1px solid transparent;
+  transition: color .2s, border-color .2s;
+}
+.rn-foot .rn-foot-links a:hover { color: var(--ink-dark); border-bottom-color: var(--brand-bright); }
+.rn-foot .rn-foot-links a:focus-visible { outline: 2px solid var(--action); outline-offset: 3px; }
+
+/* The disclaimer. Quietest thing on the band, and the widest measure: it is
+   read once, by somebody looking for it. */
+.rn-foot .rn-foot-note {
+  max-width: 760px; margin: 18px auto 0;
+  font-family: var(--fb); font-size: 11.5px; line-height: 1.7;
+  color: var(--muted-dark);
+}
+
+.rn-foot .rn-foot-copy {
+  font-family: var(--fb);
+  font-size: 11px; letter-spacing: .06em;
+  color: var(--muted-dark);
+  margin: 16px 0 0;
+}
+
+/* ---- FOLDED: the landing page. No band, no border, no standalone footer
+   after the peak. It sits inside the finale's dark stage under a fading
+   hairline, where the colophon is, so the peak stays the last thing on the
+   page while the merchant facts still render on it. ---- */
+.rn-foot.rn-foot-folded {
+  background: none;
+  border-top: 0;
+  margin-top: 0;
+  padding: 0;
+}
+
+/* 640 to match the landing page, which is the one surface where this footer
+   renders folded inside another layout. */
+@media (max-width: 640px) {
+  .rn-foot { padding: 30px 0 26px; }
+  .rn-foot .rn-foot-lines { font-size: 12.5px; }
+  .rn-foot .rn-foot-links { gap: 8px 16px; }
+  .rn-foot .rn-foot-links a { font-size: 10px; letter-spacing: .1em; }
+  .rn-foot.rn-foot-folded { margin-top: 42px; }
+}

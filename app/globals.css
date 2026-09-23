@@ -1,0 +1,163 @@
+/* ════════════════════════════════════════════════════════════════
+   TGO-RUPALI · globals.css
+   PART 1 of the SDP VSL skin: the THEME token block, the only thing
+   that swaps per client. Component design lives in landing.css and is
+   token-only, so it re-themes from here and stays identical to SDP.
+
+   THEME: FIT WITH RUPALI, taken from the client's logo
+   (/workspace/mukul logo.png, supplied 2026-09-19). The logo is a tree:
+   a near-black FOREST trunk and wordmark, LIME leaves, and RASPBERRY fruit
+   (the pomegranate, and the word "WITH"). Colours measured from it:
+       forest  ~#002000 to #003000   (tree, "FIT", "RUPALI")
+       raspberry ~#C00048            ("WITH", pomegranate, divider)
+       lime    ~#78B000              (leaves, apple, "REPLENISH")
+       ground  white / off-white
+
+   HOW THE THREE ARE SPENT, and the discipline that keeps it premium:
+     · FOREST is the skin's --brand slot: headings, eyebrows, dashes, checks,
+       rules, card edges, and every dark band. It is the authority colour.
+     · RASPBERRY is ACTION, and the logo's own accent-word device. It fills
+       the CTA and colours the one lit word in a headline, exactly as "WITH"
+       sits lit between "FIT" and "RUPALI". Nothing else.
+     · LIME is the leaf. It only ever appears at icon or dot scale, or as
+       the accent text on a dark forest band. Never a fill on white: lime
+       on white is 2.6:1 and reads as a sports drink.
+   Forest and lime are one hue family, so the page reads as TWO colours
+   (green + raspberry), which is what the logo reads as.
+
+   Measured contrast (WCAG):
+       white on raspberry #C0084A      6.2:1   (the CTA label)
+       raspberry #C0084A on white      6.2:1   (the lit headline word)
+       forest-deep #0B3A1A on white   12.9:1   (headings, eyebrows)
+       lime-bright #9BD138 on #0A2414  9.1:1   (accent text, dark bands)
+
+   The countdown is FOREST, not red. A red timer beside a raspberry button
+   is two reds inches apart: the clock borrows the button's urgency and the
+   button loses its singularity (the Deepti gold-timer lesson, 2026-09-10).
+
+   LAW 1 (skin PART 3): tokens live on :root, never on .sdp-root, so the
+   checkout / legal / thank-you surfaces LAUNCH adds can read them too.
+   LAW 2: the next/font variables they read are set on <html>
+   (app/layout.tsx), the same element that declares these tokens.
+================================================================ */
+
+:root {
+  /* ---- FOREST = AUTHORITY (the skin's --brand slot) ---- */
+  --brand: #1E6B34;  --brand-rgb: 30,107,52;           /* lit forest: fills, dots, rules, icons */
+  --brand-deep: #0B3A1A;                               /* headings + eyebrows: 12.9:1 */
+  --brand-bright: #9BD138;                             /* LIME, the leaf: accent on dark bands */
+  --brand-bright-rgb: 155,209,56;
+  --brand-soft: rgba(var(--brand-rgb), .10);
+  --brand-ring: rgba(var(--brand-rgb), .25);
+  --brand-fill: #EEF5EC;                               /* soft forest tint behind pills */
+  --brand-text: #1A5C2D;                               /* links + small forest type */
+  --leaf: #78B000;                                     /* the logo's lime, dot/icon scale only */
+
+  /* ---- RASPBERRY = ACTION ---- */
+  --action: #C0084A;  --action-rgb: 192,8,74;
+  --action-bright: #DE2A66;
+  --action-deep: #8E0536;
+  --action-fill: #FCEBF1;                              /* soft raspberry tint */
+  /* ONE pink for every accent word, on light bands and dark. --action itself
+     is 6.22 on white but only 2.65 on the dark finale, which fails even the
+     large-text floor, so the accent word used the darker value in one place
+     and a lighter one in the other and they did not match. --action-bright
+     is 4.54 on white and 3.63 on the dark green: it clears normal text on
+     light and large text on dark, which is what a headline is. */
+  --accent-word: var(--action-bright);
+
+  /* ---- LIGHT NEUTRALS: white ground, green-cast greys ---- */
+  --bg: #FFFFFF;
+  --bg-alt: #F5F8F3;
+  --card: #FFFFFF;
+  --ink: #0F1A13;  --ink-rgb: 15,26,19;
+  --ink-soft: #46534A;
+  --muted: #647068;
+  --border: #E1E8DF;
+  --border-strong: #C9D5C7;
+
+  /* ---- DARK NEUTRALS: all forest (founder, guarantee, finale bands) ---- */
+  --bg-dark: #0A2414;
+  --bg-dark-alt: #0F2D1A;
+  --bg-dark-elev: #163B24;
+  --ink-dark: #F7FAF5;
+  --ink-dark-soft: #CFDCCD;
+  --muted-dark: #93A695;
+  --border-dark: #1B3D27;
+  --border-dark-strong: #2A5236;
+
+  /* ---- FUNCTIONAL (icon scale only, never a section) ---- */
+  --success: #1E6B34;
+  --danger: #0B3A1A;  --danger-rgb: 11,58,26;          /* the timer pulse: forest, not red (see above) */
+  --star: #F2A900;
+  --gold: #E09B00;
+
+  /* ---- TYPE: the skin's two voices. Only the faces swap, never the roles.
+     DISPLAY = Schibsted Grotesk, set UPPERCASE (H1, H2, numbers, CTA).
+     BODY    = Manrope (eyebrows, chips, paragraphs, FAQ).
+     Both are geometric sans, which is what the Fit With Rupali wordmark is,
+     so the mark and the headlines finally speak the same language. ---- */
+  --fh: var(--font-display), 'Schibsted Grotesk', 'Helvetica Neue', sans-serif;
+  --fb: var(--font-manrope), 'Manrope', 'Helvetica Neue', sans-serif;
+  /* THE ONE DIAL FOR HEADLINE WEIGHT. Schibsted Grotesk runs 400-900; 800 is
+     heavy enough to read as a heading without the slab-like closed counters
+     900 gives at large sizes. Change this number, nothing else. */
+  --fh-weight: 800;
+  /* The headline's SUBORDINATE lines (h1 line 2 and 3). One step lighter than
+     the promise above them, so the hierarchy inside a single headline is
+     weight rather than size alone. */
+  --fh-weight-sub: 700;
+
+  /* ---- RADII ---- */
+  --r-sm: 8px; --r: 12px; --r-lg: 18px; --r-xl: 28px;
+
+  /* ---- ACCENT ADAPTATIONS (skin PART 3 law 8) ---- */
+  --cta-ink: #FFFFFF;                                  /* raspberry is a dark fill, white passes */
+  --accent-text-light: var(--brand-deep);
+  --accent-text-dark: var(--brand-bright);
+  --announce-chip: var(--action);                      /* the lit number chip on the forest strip */
+
+  /* ---- DERIVED (formulas, rebuild from the palette automatically) ---- */
+  --grad-brand:     linear-gradient(135deg, var(--brand-deep), var(--brand));
+  --grad-announce:  linear-gradient(90deg, var(--brand-deep), var(--brand) 50%, var(--brand-deep));
+  --grad-cta:       linear-gradient(180deg, var(--action-bright) 0%, var(--action) 55%, var(--action-deep) 100%);
+  --grad-urgency:   linear-gradient(135deg, var(--brand-deep) 0%, var(--brand) 100%);
+  --grad-guarantee: linear-gradient(135deg, var(--bg-dark-alt), var(--bg-dark-elev));
+  --hero-stage:     linear-gradient(180deg, #FBFCFA 0%, #F1F5EE 100%);
+  --hero-bloom:     radial-gradient(circle, rgba(var(--brand-bright-rgb), .20), transparent 65%);
+  --glow-cta:       0 8px 26px rgba(var(--action-rgb), .30);
+  --glow-cta-hover: 0 12px 34px rgba(var(--action-rgb), .42);
+  --shadow-card:    0 2px 12px rgba(var(--ink-rgb), .05);
+  --shadow-card-hover: 0 8px 24px rgba(var(--brand-rgb), .14);
+  --inset-hi:       inset 0 1px 0 rgba(255,255,255,.22);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
+
+/* Page ground follows the theme (law 8), or a stray strip shows past the
+   last band on a re-themed build. */
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--fb);
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--brand-text); text-decoration: none; }
+img { max-width: 100%; height: auto; display: block; }
+button { font-family: inherit; cursor: pointer; }
+
+/* ── Reduced motion (C7) ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
