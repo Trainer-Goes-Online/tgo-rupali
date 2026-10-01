@@ -11,19 +11,21 @@ import {
   START_COVERS,
   START_TITLE,
 } from '@/lib/offer';
-import { SealCheckIcon, CheckIcon } from '@/components/shared/icons';
+import { ConfirmationStep } from '@/components/thankyou/ConfirmationStep';
 
 /**
  * THE CONFIRMATION · /thank-you
  *
  *   checkout -> PAYMENT -> /book-a-call -> BOOKING -> /thank-you
  *
- * By the time anyone lands here they have paid AND booked, so the only thing
- * left to influence is whether they turn up prepared. Every push to book is
- * gone: on a page reached only by booking, a "book your slot" button is a bug.
+ * By the time anyone lands here they have paid AND booked, but the call is
+ * not confirmed until they connect on WhatsApp. So the hero is that one
+ * action, and nothing on the page may say "confirmed" before it. Every push
+ * to book is gone: on a page reached only by booking, a "book your slot"
+ * button is a bug.
  *
- * BAND RHYTHM: dark (confirmation), light (what this is), light-alt (prep),
- * dark (close). The page opens and closes on the deepest surface.
+ * BAND RHYTHM: light stage (WhatsApp bridge), light (what this is),
+ * light-alt (prep), dark (close).
  *
  * ⚠️ "WHAT THIS IS" IS A PLACEHOLDER. The client's copy never describes what
  * the ₹97 books, so the section that should say what it covers and what it is
@@ -60,42 +62,13 @@ function ThankYou() {
 
   return (
     <div className="rn-ty">
-      {/* ── 1 · CONFIRMATION ─────────────────────────────────────── */}
-      <section className="ty-sec ty-dark ty-hero">
-        <div className="ty-wrap">
-          <span className="ty-seal" aria-hidden>
-            <SealCheckIcon />
-          </span>
-          <span className="ty-badge">Booking confirmed</span>
-          <h1 className="ty-h1">
-            Your slot is <em>locked in.</em>
-          </h1>
-          <p className="ty-sub">
-            The details are on their way to the email address you booked with.
-            Put it in your calendar now, while it is in front of you.
-          </p>
-
-          <ul className="ty-chips">
-            <li>
-              <span className="ty-tick" aria-hidden>
-                <CheckIcon />
-              </span>
-              Confirmation by email, with your joining details
-            </li>
-            <li>
-              <span className="ty-tick" aria-hidden>
-                <CheckIcon />
-              </span>
-              A reminder before it starts
-            </li>
-          </ul>
-        </div>
-      </section>
+      {/* ── 1 · BRIDGE: confirm on WhatsApp ──────────────────────── */}
+      <ConfirmationStep />
 
       {/* ── 2 · WHAT THIS IS ─────────────────────────────────────── */}
       <section className="ty-sec ty-light">
         <div className="ty-wrap">
-          <span className="ty-eyebrow center">WHAT YOU HAVE BOOKED</span>
+          <span className="ty-eyebrow center">YOUR STRATEGY CALL</span>
           <h2 className="ty-h2">
             Your <em>{START_TITLE}</em>
           </h2>
@@ -155,10 +128,11 @@ function ThankYou() {
       <section className="ty-sec ty-dark ty-close">
         <div className="ty-wrap">
           <h2 className="ty-h2">
-            See you <em>then.</em>
+            One message <em>away.</em>
           </h2>
           <p className="ty-sub">
-            Something come up, or the confirmation not arrived? Write to{' '}
+            Your call is confirmed once you connect on WhatsApp. Trouble with
+            the link, or something come up? Write to{' '}
             <a href={`mailto:${emailPrimary}`}>{emailPrimary}</a> or call{' '}
             <a href={`tel:${phonePrimaryE164}`}>{phonePrimary}</a>.
           </p>

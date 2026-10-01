@@ -41,6 +41,16 @@ export const phoneSecondaryE164 = `+91${business.phones[1].replace(/\D/g, '')}`;
 export const emailPrimary = business.emails[0];
 export const emailSecondary = business.emails[1];
 
+/**
+ * The /thank-you "confirm your call" handoff. Built from phonePrimaryE164 so
+ * it always matches the number on the legal pages and footer; only the
+ * prefilled message is specific to this link.
+ */
+export const WHATSAPP_CONFIRM_URL = `https://api.whatsapp.com/send/?phone=${phonePrimaryE164.replace(
+  /\D/g,
+  '',
+)}&text=Hey%2C+I%27ve+booked+a+call.+What%27s+the+next+step+to+confirm+my+call%3F&type=phone_number&app_absent=0`;
+
 /** Client-supplied, already a single line. Used by the footer and the legal pages. */
 export const addressLine = business.address;
 
