@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 
 /* Scoped `.rn-ty`, token-only. Never indexed: a crawler that finds this
-   indexes a page telling strangers their booking is confirmed. */
+   indexes a page addressed to people who have just booked. */
 import '../thankyou.css';
 
+/* Not "confirmed": the call is confirmed only after the WhatsApp step the
+   hero asks for, and the tab title must not say otherwise. */
 export const metadata: Metadata = {
-  title: 'Your booking is confirmed',
-  description: 'Payment received and your slot is booked.',
+  title: 'One more step to confirm your call',
+  description: 'Your slot is booked. Connect on WhatsApp to confirm your strategy call.',
   robots: { index: false, follow: false },
 };
 
