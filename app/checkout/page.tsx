@@ -5,7 +5,7 @@
  *
  * Built to the house checkout anatomy: a header with a way back, a centred
  * masthead, then a two-column body with the form on the left and a STICKY
- * order summary on the right that collapses into a tap-to-open accordion on a
+ * order summary on the right that becomes a compact card above the form on a
  * phone. It declares no colour of its own: everything comes from :root via
  * app/checkout.css.
  *
@@ -49,7 +49,6 @@ import { PaymentLogos } from '@/components/shared/PaymentLogos';
 import {
   AlertIcon,
   ArrowRightIcon,
-  CaretDownIcon,
   CardIcon,
   CheckIcon,
   LockIcon,
@@ -520,7 +519,7 @@ export default function CheckoutPage() {
               {failed && <p className="pay-error">{failed}</p>}
 
               <button type="submit" className="pay-cta" disabled={busy}>
-                <span>{busy ? 'Taking you to payment' : `Pay ${feeLabel} & Continue`}</span>
+                {busy ? <span>Taking you to payment</span> : <CtaLabel />}
                 <span className="arrow" aria-hidden>
                   <ArrowRightIcon size={13} />
                 </span>
@@ -582,7 +581,7 @@ export default function CheckoutPage() {
             <strong>{feeLabel}</strong>
           </span>
           <button type="submit" form="pay-form" className="pay-stuck-go" disabled={busy}>
-            <span>{busy ? 'Taking you to payment' : 'Pay & book'}</span>
+            {busy ? <span>Taking you to payment</span> : <CtaLabel />}
             <span className="arrow" aria-hidden>
               <ArrowRightIcon size={12} />
             </span>
@@ -616,33 +615,15 @@ function readToken(name: string, fallback: string): string {
  * stack: nothing inside the offer has been priced, and "worth ₹4,500" against
  * an unnamed step would be inventing a client fact on a live sales page.
  *
- * Accordion below 1000px, always open above it. The toggle keeps its
- * aria-expanded on both, because the CSS hides the caret rather than removing
- * the button.
+ * Below 1000px: the eyebrow, the lead item and the scope note only.
  */
 function OrderSummary() {
-  const [open, setOpen] = useState(false);
-
   return (
     <div className="sum">
-      <button
-        type="button"
-        className="sum-toggle"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        aria-controls="sum-details"
-      >
-        <span>
-          <span className="sum-kicker">ORDER SUMMARY</span>
-          <span className="sum-title">What you are paying for</span>
-          <span className="sum-tap">
-            {open ? 'Tap to hide the details' : 'Tap to see what is included'}
-          </span>
-        </span>
-        <span className="sum-caret" aria-hidden>
-          <CaretDownIcon />
-        </span>
-      </button>
+      <div>
+        <p className="pay-eyebrow">ORDER SUMMARY</p>
+        <span className="sum-title">What you are paying for</span>
+      </div>
 
       <div className="sum-lead">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -661,7 +642,7 @@ function OrderSummary() {
         <span className="sum-lead-price">{feeLabel}</span>
       </div>
 
-      <div id="sum-details" className={open ? 'sum-details open' : 'sum-details'}>
+      <div className="sum-details">
         <p className="sum-sub">WHAT IS INCLUDED</p>
         {START_COVERS.length > 0 ? (
           <ul className="sum-covers">
@@ -711,6 +692,11 @@ function OrderSummary() {
       </div>
     </div>
   );
+}
+
+/* No list price on this offer, so the fee stands alone: no strike, no % off. */
+function CtaLabel() {
+  return <span>Book My Consultation Now - {feeLabel}</span>;
 }
 
 /**

@@ -315,7 +315,6 @@
   display: grid; place-items: center;
 }
 .rn-pay .pay-cta .arrow svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.4; }
-
 /* ── THE THREE POINTERS. House standard under every checkout CTA:
    Razorpay Secured, SSL Encrypted, and the refund note. Each is nowrap so
    a narrow phone breaks BETWEEN them, never mid-phrase. ───────────── */
@@ -372,35 +371,15 @@
 }
 @media (min-width: 640px) { .rn-pay .sum { padding: 26px 24px 28px; } }
 
-.rn-pay .sum-toggle {
-  display: flex; width: 100%; align-items: flex-start; justify-content: space-between;
-  gap: 14px; text-align: left;
-  background: none; border: 0; padding: 0; color: inherit;
-}
-@media (min-width: 1000px) { .rn-pay .sum-toggle { pointer-events: none; } }
-.rn-pay .sum-toggle:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: var(--r-sm); }
-.rn-pay .sum-kicker {
-  display: block;
-  font-family: var(--fb); font-size: 10.5px; font-weight: 700;
-  letter-spacing: .16em; text-transform: uppercase; color: var(--brand-text);
-}
 .rn-pay .sum-title {
-  display: block; margin-top: 8px;
+  display: block; margin-top: 12px;
   font-family: var(--fh); font-weight: var(--fh-weight);
-  font-size: 24px; line-height: 1.2; letter-spacing: -.01em; color: var(--brand-deep);
+  font-size: 25px; line-height: 1.2; letter-spacing: -.01em; color: var(--brand-deep);
 }
 .rn-pay .sum-tap {
   display: block; margin-top: 6px;
   font-size: 12px; color: var(--muted);
 }
-@media (min-width: 1000px) { .rn-pay .sum-tap { display: none; } }
-.rn-pay .sum-caret {
-  flex: 0 0 16px; width: 16px; height: 16px; margin-top: 3px; color: var(--muted);
-  transition: transform .22s;
-}
-.rn-pay .sum-caret svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2.2; }
-.rn-pay .sum-toggle[aria-expanded="true"] .sum-caret { transform: rotate(180deg); }
-@media (min-width: 1000px) { .rn-pay .sum-caret { display: none; } }
 
 /* the lead item, always visible: it is the thing being bought */
 .rn-pay .sum-lead {
@@ -432,10 +411,6 @@
   font-family: var(--fb); font-size: 14px; font-weight: 700;
   color: var(--ink); font-variant-numeric: tabular-nums;
 }
-
-.rn-pay .sum-details { display: none; }
-.rn-pay .sum-details.open { display: block; }
-@media (min-width: 1000px) { .rn-pay .sum-details { display: block; } }
 
 .rn-pay .sum-sub {
   margin: 20px 0 10px;
@@ -500,6 +475,21 @@
 }
 .rn-pay .sum-scope p { margin: 0; font-size: 13.5px; line-height: 1.65; color: var(--ink); }
 .rn-pay .sum-scope p + p { margin-top: 8px; }
+
+/* Below 1000px the summary is the eyebrow, the lead item and the scope note.
+   The breakdown, the total band and the method tile are desktop only; the
+   docked bar carries the total on mobile. Kept after the rules it overrides:
+   same specificity, so source order decides. */
+@media (max-width: 999px) {
+  .rn-pay .sum-title,
+  .rn-pay .sum-details,
+  .rn-pay .sum-rule,
+  .rn-pay .sum-total,
+  .rn-pay .sum-method,
+  .rn-pay .pay-card h2,
+  .rn-pay .pay-card .pay-hint { display: none; }
+  .rn-pay .pay-card .pay-note { margin-top: 14px; }
+}
 
 @media (max-width: 560px) {
   .rn-pay .pay-body { padding: 32px 0 56px; }
