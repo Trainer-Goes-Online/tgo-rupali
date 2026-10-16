@@ -294,12 +294,12 @@
 .rn-pay .pay-cta {
   display: flex; align-items: center; justify-content: center; gap: 12px;
   width: 100%; margin-top: 26px;
-  min-height: 60px; padding: 18px 26px 16px;
+  min-height: 54px; padding: 14px 22px 13px;
   background: var(--grad-cta);
   color: var(--cta-ink);
   border: 0; border-radius: 999px;
   font-family: var(--fb); text-transform: uppercase; font-weight: 800;
-  font-size: 19px; letter-spacing: .06em; line-height: 1.2;
+  font-size: 16px; letter-spacing: .04em; line-height: 1.2;
   box-shadow: var(--glow-cta), var(--inset-hi);
   transition: transform .2s, filter .2s, box-shadow .2s;
 }
@@ -496,7 +496,7 @@
   .rn-pay .pay-mast { margin-bottom: 28px; }
   .rn-pay .pay-card { padding: 22px 18px 24px; }
   .rn-pay .sum { padding: 20px 17px 22px; }
-  .rn-pay .pay-cta { font-size: 16.5px; letter-spacing: .04em; }
+  .rn-pay .pay-cta { font-size: 14px; letter-spacing: .03em; padding: 13px 18px 12px; }
 }
 
 /* ── THE MOBILE DOCKED BAR ────────────────────────────────────────────
@@ -536,10 +536,10 @@
   .rn-pay .pay-stuck-go {
     flex: 1 1 auto;
     display: flex; align-items: center; justify-content: center; gap: 9px;
-    padding: 14px 18px; border: 0; border-radius: 999px;
+    padding: 12px 14px; border: 0; border-radius: 999px;
     background: var(--grad-cta); color: var(--cta-ink); cursor: pointer;
     font-family: var(--fb); text-transform: uppercase; font-weight: 800;
-    font-size: 17px; letter-spacing: .05em;
+    font-size: 13px; letter-spacing: .02em; line-height: 1.2; text-align: center;
     box-shadow: var(--glow-cta);
   }
   .rn-pay .pay-stuck-go:disabled { opacity: .62; cursor: default; }
