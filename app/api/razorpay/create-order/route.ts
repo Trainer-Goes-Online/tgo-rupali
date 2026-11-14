@@ -50,6 +50,9 @@ export async function POST(req: Request) {
   const city = truncate(body.city, 80).trim();
   const country = truncate(body.country, 2).trim().toLowerCase() || 'in';
   const occupation = truncate(body.occupation, 32).trim();
+  /* A strict boolean: anything but `true` is no add-on. */
+  const bump = body.bump === true;
+  const amountPaise = CHECKOUT_CONFIG.amountPaise + (bump ? CHECKOUT_CONFIG.bumpPaise : 0);
 
   if (!firstName || !lastName || !email || !phone || !city) {
     return NextResponse.json({ ok: false, reason: 'missing-fields' }, { status: 400 });
@@ -75,7 +78,7 @@ export async function POST(req: Request) {
   const utmOf = (bodyVal: unknown, edgeVal: unknown, max: number) =>
     truncate(bodyVal, max) || truncate(edgeVal, max);
 
-  /* Fourteen of the fifteen allowed. No phone, timestamp or amount: Razorpay
+  /* All fifteen allowed, `bump` being the last. No phone, timestamp or amount: Razorpay
      returns those on the webhook payload, so they never have to travel. */
   const notes: Record<string, string> = {
     kind: CHECKOUT_CONFIG.orderKind,
@@ -114,6 +117,8 @@ export async function POST(req: Request) {
     clid: fbclid,
     ref: referrer,
     lp: landingUrl,
+    /* The fifteenth key: whether the 4-guide add-on is on this order. */
+    bump: bump ? '1' : '0',
   };
 
   /* Repaired, not just logged: a rejected order is an unpaid buyer. */
@@ -135,7 +140,7 @@ export async function POST(req: Request) {
         authorization: `Basic ${Buffer.from(`${keyId}:${keySecret}`).toString('base64')}`,
       },
       body: JSON.stringify({
-        amount: CHECKOUT_CONFIG.amountPaise,
+        amount: amountPaise,
         currency: CHECKOUT_CONFIG.currency,
         receipt: `rn_${Date.now()}`,
         notes,

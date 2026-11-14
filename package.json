@@ -4,10 +4,10 @@
   "private": true,
   "description": "Dt. Rupali Nayak fertility programme. VSL funnel on Next.js 15 + React 19, SDP VSL component system.",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "node node_modules/next/dist/bin/next dev",
+    "build": "node node_modules/next/dist/bin/next build",
+    "start": "node node_modules/next/dist/bin/next start",
+    "lint": "node node_modules/next/dist/bin/next lint"
   },
   "dependencies": {
     "next": "^15.5.18",

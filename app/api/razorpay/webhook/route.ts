@@ -141,6 +141,7 @@ export async function POST(req: Request) {
         currency: CHECKOUT_CONFIG.currency,
         product: CHECKOUT_CONFIG.contentName,
         occupation: ctx.occupation,
+        bump: ctx.bump,
       })
     : { ok: false, status: 0 };
 

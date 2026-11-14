@@ -29,7 +29,7 @@
 import Link from 'next/link';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { business, feeLabel } from '@/lib/site';
+import { business, bumpLabel, feeLabel, inrLabel, site } from '@/lib/site';
 import {
   OFFER_PENDING,
   PROGRAMME_TITLE,
@@ -53,6 +53,7 @@ import {
   CheckIcon,
   LockIcon,
   ShieldCheckIcon,
+  StarIcon,
 } from '@/components/shared/icons';
 
 declare global {
@@ -121,6 +122,89 @@ const OCCUPATIONS = [
   { value: 'homemaker', label: 'Homemaker' },
 ] as const;
 
+/* THE BUMP OFFER. Copy as supplied by the client; the price comes from
+   NEXT_PUBLIC_BUMP_FEE via lib/site.ts and is re-derived on the server, so the
+   browser only ever says yes or no. */
+const BUMP_TITLE = '4 Fertility Guides';
+const BUMP_HEADLINE = '4 ready-to-use guides to support your fertility journey.';
+/* Names match the PDFs the buyer downloads (FitWithRupali_Guide1..4), so the
+   checkout, the confirmation email and the files all say the same thing. */
+type GuideIcon = 'foods' | 'kitchen' | 'tea' | 'his';
+const BUMP_ITEMS: { title: string; sub: string; icon: GuideIcon }[] = [
+  {
+    title: 'The Fertility Food Blueprint',
+    sub: 'Everyday foods to support hormones & preconception health',
+    icon: 'foods',
+  },
+  { title: 'The Fertility Kitchen', sub: '5 simple meals & snacks for busy days', icon: 'kitchen' },
+  { title: 'Sip & Nourish', sub: '5 easy teas with everyday ingredients', icon: 'tea' },
+  {
+    title: 'His Fertility Blueprint',
+    sub: 'Simple food & lifestyle habits for your partner',
+    icon: 'his',
+  },
+];
+
+/**
+ * One small two-tone icon per guide: forest line work, a raspberry or lime
+ * accent, all from theme tokens. 24-unit grid, drawn at 22px in the bump card.
+ */
+function GuideGlyph({ name }: { name: GuideIcon }) {
+  const line = {
+    stroke: 'var(--brand-deep)',
+    strokeWidth: 1.6,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+  };
+  switch (name) {
+    /* A bowl of greens with berries: the food blueprint. */
+    case 'foods':
+      return (
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden>
+          <path d="M6.6 10.8c-.7-2.1.6-4 2.6-4.1.5-1.7 2.5-2.5 4-1.6 1.6-.6 3.4.4 3.6 2.1 1.5.4 2.2 2 1.7 3.6" fill="var(--leaf)" stroke="var(--brand)" strokeWidth="1.3" strokeLinejoin="round" />
+          <circle cx="10" cy="9.4" r="1.2" fill="var(--action)" />
+          <circle cx="14.6" cy="8.6" r="1" fill="var(--action-bright)" />
+          <path d="M3.5 11h17a8.5 8.5 0 0 1-17 0Z" fill="var(--bg)" {...line} />
+          <path d="M9 19.4h6" fill="none" {...line} />
+        </svg>
+      );
+    /* A cooking pot with steam and a leaf on the lid: the kitchen. */
+    case 'kitchen':
+      return (
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden>
+          <path d="M9 2.8c-.9 1 .9 1.8 0 2.8M12.5 2.4c-.9 1 .9 1.8 0 2.8" stroke="var(--action)" strokeWidth="1.4" strokeLinecap="round" fill="none" />
+          <path d="M4 8.6h16" fill="none" {...line} />
+          <path d="M10.6 8.6V7.4a1.4 1.4 0 0 1 2.8 0v1.2" fill="none" {...line} />
+          <path d="M5 10.6h14v5.6a3.6 3.6 0 0 1-3.6 3.6H8.6A3.6 3.6 0 0 1 5 16.2Z" fill="var(--bg)" {...line} />
+          <path d="M5 12.4H2.8M19 12.4h2.2" fill="none" {...line} />
+          <path d="M14.4 12.6c-2.6 0-3.8 1.7-3.8 4 2.3 0 3.8-1.3 3.8-4Z" fill="var(--leaf)" stroke="var(--brand)" strokeWidth="1.1" strokeLinejoin="round" />
+        </svg>
+      );
+    /* A teacup with steam and a leaf on the saucer side. */
+    case 'tea':
+      return (
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden>
+          <path d="M8.5 3.2c-.9 1 .9 1.8 0 2.8M12 2.6c-.9 1 .9 1.8 0 2.8" stroke="var(--action)" strokeWidth="1.4" strokeLinecap="round" fill="none" />
+          <path d="M4 8.5h12v4.2A5.5 5.5 0 0 1 10.5 18.2h-1A5.5 5.5 0 0 1 4 12.7Z" fill="var(--bg)" {...line} />
+          <path d="M16 10h1.4a2.3 2.3 0 0 1 0 4.6H15.6" fill="none" {...line} />
+          <path d="M3 20.6h14" fill="none" {...line} />
+          <path d="M21.4 15.2c-3.4 0-4.8 2.2-4.8 5.2 3 0 4.8-1.6 4.8-5.2Z" fill="var(--leaf)" stroke="var(--brand)" strokeWidth="1.2" strokeLinejoin="round" />
+          <path d="M5.2 11.2h9.6" stroke="var(--brand-soft)" strokeWidth="2.4" strokeLinecap="round" />
+        </svg>
+      );
+    /* The male symbol with a leaf inside: his fertility blueprint. */
+    case 'his':
+      return (
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden>
+          <circle cx="10" cy="14" r="6.4" fill="var(--bg)" {...line} />
+          <path d="M14.6 9.4 20.4 3.6M15.2 3.6h5.2v5.2" fill="none" {...line} />
+          <path d="M13 11c-3.6 0-5.2 2.3-5.2 5.4 3.2 0 5.2-1.7 5.2-5.4Z" fill="var(--leaf)" stroke="var(--brand)" strokeWidth="1.1" strokeLinejoin="round" />
+          <path d="M7.9 16.3c1.4-1.6 2.8-2.8 4.3-3.7" stroke="var(--brand-deep)" strokeWidth="1" strokeLinecap="round" fill="none" />
+        </svg>
+      );
+  }
+}
+
 type Fields = {
   firstName: string;
   lastName: string;
@@ -150,6 +234,9 @@ export default function CheckoutPage() {
      /book-a-call. They have paid and have no slot, and the first anyone knows
      is a support message. */
   const [ack, setAck] = useState(false);
+  /* Off by default: a pre-ticked add-on is a chargeback waiting to happen. */
+  const [bump, setBump] = useState(false);
+  const totalLabel = inrLabel(site.feeInr + (bump ? site.bumpInr : 0));
 
   /* ARRIVAL. GA4 gets begin_checkout, Meta gets AddToCart. InitiateCheckout
      deliberately does NOT fire here: it waits until the details are valid and
@@ -225,6 +312,7 @@ export default function CheckoutPage() {
              Pabbly gets its own dial_code column, so a workflow can route on
              the country without parsing a number back apart. */
           dialCode: dial,
+          bump,
           ...collectSignals(),
         }),
       });
@@ -259,7 +347,7 @@ export default function CheckoutPage() {
            The existing /public/brand/fit-with-rupali-logo.png will not do: it
            has a white ground the landing page blends away with mix-blend-mode,
            which an iframe on another origin cannot do. */
-        description: START_TITLE,
+        description: bump ? `${START_TITLE} + ${BUMP_TITLE}` : START_TITLE,
         prefill: {
           name: `${f.firstName.trim()} ${f.lastName.trim()}`.trim(),
           email: f.email.trim(),
@@ -466,25 +554,25 @@ export default function CheckoutPage() {
                   </span>
                 </label>
 
-                <label>
-                  <span className="f-label">You are currently</span>
-                  <select
+                {/* A div, not a label: a label re-clicks the button inside it,
+                    which would reopen the list right after a pick. */}
+                <div>
+                  <span className="f-label" id="occ-label">You are currently</span>
+                  <ThemedSelect
+                    labelId="occ-label"
+                    placeholder="Please choose"
+                    options={OCCUPATIONS}
                     value={f.occupation}
-                    onChange={(e) => setF((s) => ({ ...s, occupation: e.target.value }))}
-                    aria-invalid={(touched && !v.occupation) || undefined}
-                  >
-                    <option value="">Please choose</option>
-                    {OCCUPATIONS.map((o) => (
-                      <option key={o.value} value={o.value}>
-                        {o.label}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={(x) => setF((s) => ({ ...s, occupation: x }))}
+                    bad={touched && !v.occupation}
+                  />
                   <span className="f-note">
                     So your plan is built around the hours you actually have.
                   </span>
-                </label>
+                </div>
               </div>
+
+              <BumpOffer on={bump} onChange={setBump} />
 
               {/* The same promise as the note above, asked for rather than
                   told, at the moment of paying. Its own line of error text and
@@ -519,7 +607,7 @@ export default function CheckoutPage() {
               {failed && <p className="pay-error">{failed}</p>}
 
               <button type="submit" className="pay-cta" disabled={busy}>
-                {busy ? <span>Taking you to payment</span> : <CtaLabel />}
+                {busy ? <span>Taking you to payment</span> : <CtaLabel total={totalLabel} />}
                 <span className="arrow" aria-hidden>
                   <ArrowRightIcon size={13} />
                 </span>
@@ -562,7 +650,7 @@ export default function CheckoutPage() {
             </form>
 
             <div className="pay-sum-col">
-              <OrderSummary />
+              <OrderSummary bump={bump} onRemoveBump={() => setBump(false)} total={totalLabel} />
             </div>
           </div>
         </div>
@@ -575,13 +663,21 @@ export default function CheckoutPage() {
           landing page's StickyCta: that bar's job is to send someone to
           /checkout, which is where this reader already is. */}
       <div className="pay-stuck" aria-hidden={busy ? true : undefined}>
+        {/* The same bump state as the card in the form, so ticking either
+            ticks both and the total below moves with it. */}
+        <label className={`pay-stuck-bump${bump ? ' is-on' : ''}`}>
+          <input type="checkbox" checked={bump} onChange={(e) => setBump(e.target.checked)} />
+          <span>
+            <b>Add {BUMP_TITLE}</b> &middot; +{bumpLabel}
+          </span>
+        </label>
         <div className="pay-stuck-inner">
           <span className="pay-stuck-fig">
             <span className="pay-stuck-cap">Total due today</span>
-            <strong>{feeLabel}</strong>
+            <strong>{totalLabel}</strong>
           </span>
           <button type="submit" form="pay-form" className="pay-stuck-go" disabled={busy}>
-            {busy ? <span>Taking you to payment</span> : <CtaLabel />}
+            {busy ? <span>Taking you to payment</span> : <CtaLabel total={totalLabel} />}
             <span className="arrow" aria-hidden>
               <ArrowRightIcon size={12} />
             </span>
@@ -617,7 +713,15 @@ function readToken(name: string, fallback: string): string {
  *
  * Below 1000px: the eyebrow, the lead item and the scope note only.
  */
-function OrderSummary() {
+function OrderSummary({
+  bump,
+  onRemoveBump,
+  total,
+}: {
+  bump: boolean;
+  onRemoveBump: () => void;
+  total: string;
+}) {
   return (
     <div className="sum">
       <div>
@@ -641,6 +745,24 @@ function OrderSummary() {
         </span>
         <span className="sum-lead-price">{feeLabel}</span>
       </div>
+
+      {bump && (
+        <div className="sum-lead sum-bump">
+          <span className="sum-bump-chip" aria-hidden>
+            <GuidesIcon />
+          </span>
+          <span className="sum-lead-body">
+            <b>{BUMP_TITLE}</b>
+            <span>
+              One-time add-on &middot;{' '}
+              <button type="button" className="sum-bump-remove" onClick={onRemoveBump}>
+                Remove
+              </button>
+            </span>
+          </span>
+          <span className="sum-lead-price">{bumpLabel}</span>
+        </div>
+      )}
 
       <div className="sum-details">
         <p className="sum-sub">WHAT IS INCLUDED</p>
@@ -667,7 +789,7 @@ function OrderSummary() {
 
       <div className="sum-total">
         <span className="sum-total-label">Total</span>
-        <span className="sum-total-fig">{feeLabel}</span>
+        <span className="sum-total-fig">{total}</span>
       </div>
 
       <div className="sum-method">
@@ -694,9 +816,197 @@ function OrderSummary() {
   );
 }
 
-/* No list price on this offer, so the fee stands alone: no strike, no % off. */
-function CtaLabel() {
-  return <span>Book My Consultation Now - {feeLabel}</span>;
+/**
+ * The add-on's thumbnail: a stack of four guide booklets with a leaf on the
+ * front cover. Forest pages, raspberry spine, lime leaf, all read from the
+ * theme tokens so it re-themes with the page.
+ */
+function GuidesIcon() {
+  return (
+    <svg viewBox="0 0 48 48" width="34" height="34" fill="none" aria-hidden>
+      {/* the three booklets behind, fanned */}
+      <rect x="17" y="6" width="22" height="29" rx="3" transform="rotate(10 28 20)" fill="var(--brand-soft)" stroke="var(--brand)" strokeWidth="1.6" />
+      <rect x="14" y="8" width="22" height="29" rx="3" transform="rotate(4 25 22)" fill="var(--bg)" stroke="var(--brand)" strokeWidth="1.6" />
+      <rect x="11" y="11" width="22" height="29" rx="3" transform="rotate(-3 22 25)" fill="var(--bg)" stroke="var(--brand)" strokeWidth="1.6" />
+      {/* the front booklet */}
+      <g transform="rotate(-8 20 28)">
+        <rect x="8" y="14" width="22" height="29" rx="3" fill="var(--bg)" stroke="var(--brand-deep)" strokeWidth="1.8" />
+        <rect x="8" y="14" width="4.5" height="29" rx="2" fill="var(--action)" />
+        <path d="M24.5 21c-5.5 0-8 3.6-8 8.6 4.9 0 8-2.7 8-8.6Z" fill="var(--leaf)" stroke="var(--brand)" strokeWidth="1.2" strokeLinejoin="round" />
+        <path d="M16.6 29.6c2.2-2.6 4.4-4.4 6.6-5.8" stroke="var(--brand-deep)" strokeWidth="1.2" strokeLinecap="round" />
+        <path d="M15.5 35.5h10M15.5 38.5h7" stroke="var(--brand-ring)" strokeWidth="1.6" strokeLinecap="round" />
+      </g>
+      {/* the count */}
+      <circle cx="38" cy="38" r="7" fill="var(--action)" stroke="var(--bg)" strokeWidth="1.8" />
+      <text x="38" y="41.4" textAnchor="middle" fontSize="9.5" fontWeight="800" fill="#fff" fontFamily="var(--fb)">4</text>
+    </svg>
+  );
+}
+
+/* No list price on this offer, so the fee stands alone: no strike, no % off.
+   The figure is the live total, so it moves with the add-on. */
+function CtaLabel({ total }: { total: string }) {
+  return <span>Book My Consultation Now - {total}</span>;
+}
+
+/**
+ * THE BUMP OFFER. One card, one decision: the footer bar is the toggle and
+ * the summary's "Remove" undoes it. Unticked by default.
+ */
+function BumpOffer({ on, onChange }: { on: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <div className={`bump${on ? ' is-on' : ''}`}>
+      <span className="bump-badge">
+        <StarIcon size={11} />
+        Recommended
+      </span>
+      <div className="bump-body">
+        <div className="bump-top">
+          <span className="bump-eyebrow">One-time add-on</span>
+          <span className="bump-price">+ {bumpLabel}</span>
+        </div>
+        <p className="bump-head">{BUMP_HEADLINE}</p>
+        <ul className="bump-list">
+          {BUMP_ITEMS.map((it) => (
+            <li key={it.title}>
+              <span className="bump-ico" aria-hidden>
+                <GuideGlyph name={it.icon} />
+              </span>
+              <span>
+                <b>{it.title}</b>
+                <span>{it.sub}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <label className="bump-toggle">
+        <input type="checkbox" checked={on} onChange={(e) => onChange(e.target.checked)} />
+        <span>
+          {on ? `Added to your order · ${bumpLabel}` : `Tap to add for ${bumpLabel} more`}
+        </span>
+      </label>
+    </div>
+  );
+}
+
+/**
+ * A themed single-choice dropdown. A native <select>'s open list is drawn by
+ * the OS and ignores CSS, so this is a button + listbox following the ARIA
+ * select-only combobox pattern: arrows / Home / End move, Enter or Space
+ * picks, Escape and outside clicks close.
+ */
+function ThemedSelect({
+  labelId,
+  placeholder,
+  options,
+  value,
+  onChange,
+  bad,
+}: {
+  labelId: string;
+  placeholder: string;
+  options: readonly { value: string; label: string }[];
+  value: string;
+  onChange: (v: string) => void;
+  bad: boolean;
+}) {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const root = useRef<HTMLDivElement>(null);
+  const listId = `${labelId}-list`;
+  const current = options.find((o) => o.value === value);
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: PointerEvent) => {
+      if (!root.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('pointerdown', close);
+    return () => document.removeEventListener('pointerdown', close);
+  }, [open]);
+
+  const openAt = () => {
+    const i = options.findIndex((o) => o.value === value);
+    setActive(i < 0 ? 0 : i);
+    setOpen(true);
+  };
+  const pick = (i: number) => {
+    onChange(options[i].value);
+    setOpen(false);
+  };
+
+  const onKey = (e: React.KeyboardEvent) => {
+    if (!open) {
+      if (['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) {
+        e.preventDefault();
+        openAt();
+      }
+      return;
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActive((a) => Math.min(a + 1, options.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActive((a) => Math.max(a - 1, 0));
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      setActive(0);
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      setActive(options.length - 1);
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      pick(active);
+    } else if (e.key === 'Escape' || e.key === 'Tab') {
+      setOpen(false);
+    }
+  };
+
+  return (
+    <div className={`tsel${open ? ' is-open' : ''}`} ref={root}>
+      <button
+        type="button"
+        role="combobox"
+        className={`tsel-btn${current ? '' : ' is-empty'}`}
+        aria-labelledby={labelId}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={listId}
+        aria-activedescendant={open ? `${listId}-${active}` : undefined}
+        aria-invalid={bad || undefined}
+        onClick={() => (open ? setOpen(false) : openAt())}
+        onKeyDown={onKey}
+      >
+        <span>{current ? current.label : placeholder}</span>
+        <span className="tsel-caret" aria-hidden />
+      </button>
+      {open && (
+        <ul className="tsel-list" role="listbox" id={listId} aria-labelledby={labelId}>
+          {options.map((o, i) => (
+            <li
+              key={o.value}
+              id={`${listId}-${i}`}
+              role="option"
+              aria-selected={o.value === value}
+              className={`tsel-opt${i === active ? ' is-active' : ''}`}
+              onPointerEnter={() => setActive(i)}
+              onPointerDown={(e) => e.preventDefault()}
+              onClick={() => pick(i)}
+            >
+              <span>{o.label}</span>
+              {o.value === value && (
+                <span className="tsel-tick" aria-hidden>
+                  <CheckIcon size={12} />
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 }
 
 /**

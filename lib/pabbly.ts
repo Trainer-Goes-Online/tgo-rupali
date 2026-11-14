@@ -50,6 +50,8 @@ export type PabblyPurchase = {
   currency: string;
   product: string;
   occupation: string;
+  /** Whether the 4-guide add-on was bought on this order. */
+  bump: boolean;
 };
 
 /* Every key on every call, empty where unknown: Pabbly builds its field mapper
@@ -115,6 +117,11 @@ export async function sendPabblyPurchase(
         currency: s(p.currency),
         product: s(p.product),
         occupation: s(p.occupation),
+        /* A real boolean, for the same reason as is_test. */
+        order_bump: Boolean(p.bump),
+        /* The same fact as a plain string, for a Pabbly filter or router:
+           "Text is equal to bump" is easier to set up than a boolean check. */
+        order_type: p.bump ? 'bump' : 'normal',
       }),
     });
     return { ok: res.ok, status: res.status };

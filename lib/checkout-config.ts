@@ -1,4 +1,4 @@
-import { site, feePaise } from '@/lib/site';
+import { site, feePaise, bumpPaise } from '@/lib/site';
 import { GA4_ITEM_ID, PRODUCT_LABEL } from '@/lib/offer';
 
 /**
@@ -23,6 +23,10 @@ export const siteUrlReady = () => Boolean(SITE_URL);
 export const CHECKOUT_CONFIG = {
   amountRupees: site.feeInr,
   amountPaise: feePaise,
+  /* The optional add-on, priced server-side from the same env var the page
+     displays. The browser only says yes or no; it never sends an amount. */
+  bumpRupees: site.bumpInr,
+  bumpPaise,
   currency: 'INR',
   contentName: PRODUCT_LABEL,
   itemId: GA4_ITEM_ID,

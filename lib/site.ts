@@ -58,6 +58,9 @@ export const site = {
   /** LAUNCH's half of the funnel; every CTA on the landing page links here. */
   checkoutUrl: '/checkout',
   feeInr: Number(process.env.NEXT_PUBLIC_START_FEE ?? '97') || 97,
+  /** The checkout's one-time add-on (the 4 fertility guides). Its own
+   *  variable so it can be repriced without touching the start fee. */
+  bumpInr: Number(process.env.NEXT_PUBLIC_BUMP_FEE ?? '497') || 497,
   /** The copy's "OFFER ENDS IN : TIMER OF 5 HOURS". */
   offerHours: 5,
 };
@@ -68,3 +71,6 @@ export const CTA_LINES = ['Click Here To Get Personalised', 'Natural Conception 
 
 export const feePaise = site.feeInr * 100;
 export const feeLabel = `₹${site.feeInr.toLocaleString('en-IN')}`;
+export const bumpPaise = site.bumpInr * 100;
+export const bumpLabel = `₹${site.bumpInr.toLocaleString('en-IN')}`;
+export const inrLabel = (n: number) => `₹${n.toLocaleString('en-IN')}`;

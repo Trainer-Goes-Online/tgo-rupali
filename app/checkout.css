@@ -189,6 +189,66 @@
 .rn-pay input[aria-invalid="true"],
 .rn-pay select[aria-invalid="true"] { border-color: var(--action); background: var(--action-fill); }
 
+/* ── THE THEMED DROPDOWN. The trigger matches the inputs above exactly; the
+   open list is a card in the site's palette instead of the OS's blue. */
+.rn-pay .tsel { position: relative; }
+.rn-pay .tsel-btn {
+  width: 100%;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  font-family: var(--fb); font-size: 15.5px; line-height: 1.4; text-align: left;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r);
+  padding: 13px 14px;
+  outline: none; cursor: pointer;
+  transition: border-color .18s, box-shadow .18s;
+}
+.rn-pay .tsel-btn.is-empty { color: var(--muted); }
+.rn-pay .tsel-btn:hover { border-color: var(--brand-ring); }
+.rn-pay .tsel-btn:focus-visible,
+.rn-pay .tsel.is-open .tsel-btn {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-soft);
+}
+.rn-pay .tsel-btn[aria-invalid="true"] { border-color: var(--action); background: var(--action-fill); }
+.rn-pay .tsel-caret {
+  flex: 0 0 10px; width: 10px; height: 10px; margin-top: -4px;
+  border-right: 2px solid var(--brand); border-bottom: 2px solid var(--brand);
+  transform: rotate(45deg);
+  transition: transform .2s ease, margin-top .2s ease;
+}
+.rn-pay .tsel.is-open .tsel-caret { transform: rotate(-135deg); margin-top: 4px; }
+.rn-pay .tsel-list {
+  position: absolute; z-index: 30; left: 0; right: 0; top: calc(100% + 6px);
+  margin: 0; padding: 6px; list-style: none;
+  background: var(--card);
+  border: 1px solid var(--brand-ring);
+  border-radius: var(--r);
+  box-shadow: 0 14px 34px rgba(var(--ink-rgb), .14), 0 2px 6px rgba(var(--ink-rgb), .06);
+  animation: tsel-in .16s ease-out;
+  transform-origin: top center;
+}
+@keyframes tsel-in {
+  from { opacity: 0; transform: translateY(-4px) scale(.98); }
+  to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) { .rn-pay .tsel-list { animation: none; } }
+.rn-pay .tsel-opt {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 11px 12px; border-radius: var(--r-sm);
+  font-family: var(--fb); font-size: 15px; color: var(--ink);
+  cursor: pointer; user-select: none;
+}
+.rn-pay .tsel-opt.is-active { background: var(--brand-fill); color: var(--brand-deep); }
+.rn-pay .tsel-opt[aria-selected="true"] { font-weight: 700; color: var(--brand-deep); }
+.rn-pay .tsel-tick {
+  flex: 0 0 20px; width: 20px; height: 20px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--brand); color: #fff;
+}
+.rn-pay .tsel-tick svg { width: 12px; height: 12px; }
+
 .rn-pay .pay-phone { display: flex; gap: 10px; }
 .rn-pay .pay-phone select { width: 132px; flex: 0 0 132px; }
 .rn-pay .pay-phone input { flex: 1 1 auto; min-width: 0; }
@@ -283,6 +343,184 @@
   color: var(--ink-soft);
 }
 .rn-pay .pay-ack strong { color: var(--ink); font-weight: 700; }
+
+/* ── THE BUMP OFFER. Raspberry frame and toggle bar (the action colour: this
+   is a thing to press), forest badge and ticks (the brand). The card grows a
+   stronger ring once taken so the state reads at a glance. */
+.rn-pay .bump {
+  position: relative;
+  margin-top: 30px;
+  border: 1.5px solid var(--action);
+  border-radius: var(--r-lg);
+  background: var(--action-fill);
+  overflow: visible;
+  transition: box-shadow .2s ease;
+}
+.rn-pay .bump.is-on { box-shadow: 0 0 0 3px rgba(var(--action-rgb), .16), var(--glow-cta); }
+.rn-pay .bump-badge {
+  position: absolute; top: -12px; left: 18px;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 999px;
+  background: var(--brand-deep); color: #fff;
+  font-family: var(--fb); font-size: 10px; font-weight: 700;
+  letter-spacing: .16em; text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(var(--ink-rgb), .18);
+}
+.rn-pay .bump-badge svg { width: 11px; height: 11px; color: var(--star); }
+.rn-pay .bump-body { padding: 24px 22px 20px; }
+.rn-pay .bump-top {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.rn-pay .bump-eyebrow {
+  font-family: var(--fb); font-size: 11px; font-weight: 700;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--action-deep);
+}
+.rn-pay .bump-price {
+  flex: 0 0 auto;
+  padding: 4px 10px; border-radius: var(--r-sm);
+  background: var(--bg); border: 1px solid var(--brand-ring);
+  font-family: var(--fh); font-weight: var(--fh-weight);
+  font-size: 18px; line-height: 1.1; color: var(--brand);
+  font-variant-numeric: tabular-nums;
+}
+.rn-pay .bump-head {
+  margin: 12px 0 0;
+  font-family: var(--fh); font-weight: var(--fh-weight);
+  font-size: 19px; line-height: 1.3; color: var(--brand-deep);
+}
+.rn-pay .bump-list {
+  list-style: none; margin: 16px 0 0; padding: 0;
+  display: grid; grid-template-columns: 1fr; gap: 13px 20px;
+}
+@media (min-width: 640px) { .rn-pay .bump-list { grid-template-columns: 1fr 1fr; } }
+.rn-pay .bump-list li { display: flex; gap: 11px; align-items: flex-start; }
+/* Each guide's own icon (GuideGlyph in page.tsx), on a white tile so the
+   two-tone line work reads against the pink card. */
+.rn-pay .bump-ico {
+  flex: 0 0 36px; width: 36px; height: 36px;
+  display: grid; place-items: center;
+  border-radius: 10px;
+  background: var(--bg);
+  border: 1px solid var(--brand-ring);
+  box-shadow: 0 2px 6px rgba(var(--brand-rgb), .10);
+}
+.rn-pay .bump-ico svg { width: 22px; height: 22px; display: block; }
+.rn-pay .bump-list b {
+  display: block; font-family: var(--fb); font-size: 13.5px; font-weight: 700;
+  line-height: 1.4; color: var(--ink);
+}
+.rn-pay .bump-list li > span:last-child > span {
+  display: block; margin-top: 2px; font-size: 12px; line-height: 1.5; color: var(--ink-soft);
+}
+
+/* The toggle bar. Its own checkbox, painted like .pay-ack's but white on
+   raspberry. */
+.rn-pay .bump-toggle {
+  display: flex; align-items: center; justify-content: center; gap: 11px;
+  padding: 14px 18px;
+  border-radius: 0 0 calc(var(--r-lg) - 2px) calc(var(--r-lg) - 2px);
+  background: var(--grad-cta); color: var(--cta-ink);
+  font-family: var(--fb); font-size: 13.5px; font-weight: 800;
+  letter-spacing: .06em; text-transform: uppercase;
+  cursor: pointer; user-select: none;
+}
+.rn-pay .bump-toggle:hover { filter: brightness(1.05); }
+.rn-pay .bump-toggle input {
+  flex: 0 0 20px; width: 20px; height: 20px; margin: 0; padding: 0;
+  border: 2px solid #fff; border-radius: 5px;
+  background: transparent; cursor: pointer;
+}
+.rn-pay .bump-toggle input:checked {
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.6 6.35 L4.9 8.6 L9.4 3.6' fill='none' stroke='%23C0084A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: center; background-size: 13px 13px;
+}
+.rn-pay .bump-toggle input:focus-visible { outline: 2px solid #fff; outline-offset: 3px; box-shadow: none; }
+.rn-pay .bump + .pay-ack { margin-top: 18px; }
+
+/* ── BUMP MOTION. Everything loops ONLY while the add-on is untaken: the job
+   is to catch the eye, and once it is ticked the card settles down and plays
+   one "pop" instead. All of it is transform / opacity / box-shadow, so it
+   stays on the compositor, and all of it is switched off for reduced motion. */
+.rn-pay .bump-toggle { position: relative; overflow: hidden; isolation: isolate; }
+.rn-pay .bump-toggle > * { position: relative; z-index: 1; }
+
+/* 1. A light sweep across the bar every few seconds. */
+.rn-pay .bump-toggle::after {
+  content: ""; position: absolute; z-index: 0; top: 0; bottom: 0; left: 0;
+  width: 45%;
+  background: linear-gradient(100deg, transparent 0%, rgba(255,255,255,.38) 50%, transparent 100%);
+  transform: translateX(-120%) skewX(-18deg);
+  animation: bump-shine 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes bump-shine {
+  0%, 55% { transform: translateX(-120%) skewX(-18deg); }
+  100%    { transform: translateX(320%)  skewX(-18deg); }
+}
+
+/* 2. The empty checkbox breathes with a white ring. */
+.rn-pay .bump-toggle input:not(:checked) { animation: bump-ring 1.6s ease-out infinite; }
+@keyframes bump-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(255,255,255,.75); transform: scale(1); }
+  45%  { transform: scale(1.12); }
+  70%  { box-shadow: 0 0 0 9px rgba(255,255,255,0); transform: scale(1); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+}
+
+/* 3. The card's frame glows in and out. */
+.rn-pay .bump:not(.is-on) { animation: bump-glow 2.4s ease-in-out infinite; }
+@keyframes bump-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(var(--action-rgb), 0), 0 6px 18px rgba(var(--action-rgb), .10); }
+  50%      { box-shadow: 0 0 0 5px rgba(var(--action-rgb), .14), 0 10px 28px rgba(var(--action-rgb), .22); }
+}
+
+/* 4. The badge star twinkles; the price chip gives a small nudge. */
+.rn-pay .bump:not(.is-on) .bump-badge svg { animation: bump-twinkle 2s ease-in-out infinite; }
+@keyframes bump-twinkle {
+  0%, 100% { transform: scale(1) rotate(0); }
+  50%      { transform: scale(1.35) rotate(72deg); }
+}
+.rn-pay .bump:not(.is-on) .bump-price { animation: bump-nudge 4s ease-in-out infinite; }
+@keyframes bump-nudge {
+  0%, 82%, 100% { transform: rotate(0) scale(1); }
+  86% { transform: rotate(-5deg) scale(1.08); }
+  90% { transform: rotate(4deg)  scale(1.08); }
+  94% { transform: rotate(-2deg) scale(1.04); }
+}
+
+/* 5. Once taken: one pop, and the looping stops. */
+.rn-pay .bump.is-on { animation: bump-pop .45s cubic-bezier(.34,1.56,.64,1); }
+.rn-pay .bump.is-on .bump-toggle::after { animation: none; opacity: 0; }
+.rn-pay .bump-toggle input:checked { animation: bump-check .35s cubic-bezier(.34,1.56,.64,1); }
+@keyframes bump-pop {
+  0% { transform: scale(1); } 40% { transform: scale(1.025); } 100% { transform: scale(1); }
+}
+@keyframes bump-check {
+  0% { transform: scale(.6); } 60% { transform: scale(1.25); } 100% { transform: scale(1); }
+}
+
+/* The mobile bar's row gets the same breathing checkbox and a soft pulse. */
+.rn-pay .pay-stuck-bump:not(.is-on) input { animation: bump-ring-pink 1.6s ease-out infinite; }
+@keyframes bump-ring-pink {
+  0%   { box-shadow: 0 0 0 0 rgba(var(--action-rgb), .45); }
+  70%  { box-shadow: 0 0 0 8px rgba(var(--action-rgb), 0); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--action-rgb), 0); }
+}
+.rn-pay .pay-stuck-bump.is-on input { animation: bump-check .35s cubic-bezier(.34,1.56,.64,1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rn-pay .bump,
+  .rn-pay .bump *,
+  .rn-pay .bump-toggle::after,
+  .rn-pay .pay-stuck-bump input { animation: none !important; }
+  .rn-pay .bump-toggle::after { display: none; }
+}
+@media (max-width: 560px) {
+  .rn-pay .bump-body { padding: 22px 16px 18px; }
+  .rn-pay .bump-head { font-size: 17px; }
+  .rn-pay .bump-toggle { font-size: 12.5px; letter-spacing: .04em; padding: 13px 14px; }
+}
 
 .rn-pay .pay-ack + .pay-cta,
 .rn-pay .pay-ack + .pay-error + .pay-cta { margin-top: 12px; }
@@ -412,6 +650,21 @@
   color: var(--ink); font-variant-numeric: tabular-nums;
 }
 
+/* The add-on line, under the lead item while taken. */
+.rn-pay .sum-bump { margin-top: 10px; background: var(--action-fill); border-color: rgba(var(--action-rgb), .35); }
+/* The add-on's icon tile (GuidesIcon in page.tsx). */
+.rn-pay .sum-bump-chip {
+  flex: 0 0 52px; width: 52px; height: 52px;
+  display: grid; place-items: center;
+  border-radius: var(--r-sm);
+  background: var(--brand-fill); border: 1px solid var(--brand-ring);
+}
+.rn-pay .sum-bump-remove {
+  appearance: none; border: 0; background: none; padding: 0; margin: 0;
+  font: inherit; color: var(--action); text-decoration: underline; cursor: pointer;
+}
+.rn-pay .sum-bump-remove:hover { color: var(--action-deep); }
+
 .rn-pay .sum-sub {
   margin: 20px 0 10px;
   font-family: var(--fb); font-size: 10.5px; font-weight: 700;
@@ -524,6 +777,34 @@
     display: flex; align-items: center; gap: 14px;
     max-width: 560px; margin: 0 auto;
   }
+  /* The bump row: a dashed raspberry slab above the total, the mobile
+     shortcut to the add-on card in the form. */
+  .rn-pay .pay-stuck-bump {
+    display: flex; align-items: center; gap: 10px;
+    max-width: 560px; margin: 0 auto 10px;
+    padding: 9px 12px;
+    border: 1px dashed var(--action);
+    border-radius: var(--r-sm);
+    background: var(--action-fill);
+    cursor: pointer; user-select: none;
+    transition: background .15s ease, border-color .15s ease;
+  }
+  .rn-pay .pay-stuck-bump.is-on { border-style: solid; background: var(--brand-fill); border-color: var(--brand); }
+  .rn-pay .pay-stuck-bump input {
+    flex: 0 0 20px; width: 20px; height: 20px; margin: 0; padding: 0;
+    border: 2px solid var(--action); border-radius: 5px;
+    background: var(--bg); cursor: pointer;
+  }
+  .rn-pay .pay-stuck-bump input:checked {
+    background-color: var(--brand); border-color: var(--brand);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.6 6.35 L4.9 8.6 L9.4 3.6' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: center; background-size: 13px 13px;
+  }
+  .rn-pay .pay-stuck-bump input:focus { box-shadow: 0 0 0 3px var(--brand-soft); }
+  .rn-pay .pay-stuck-bump span {
+    font-family: var(--fb); font-size: 13px; line-height: 1.35; color: var(--ink-soft);
+  }
+  .rn-pay .pay-stuck-bump b { color: var(--ink); font-weight: 700; }
   .rn-pay .pay-stuck-fig { display: flex; flex-direction: column; line-height: 1.1; }
   .rn-pay .pay-stuck-cap {
     font-family: var(--fb); font-size: 10px; font-weight: 700; letter-spacing: .12em;
@@ -546,5 +827,5 @@
   .rn-pay .pay-stuck-go .arrow { display: inline-flex; }
 
   /* The spacer. Clears the bar's own height plus the safe-area inset. */
-  .rn-pay { padding-bottom: calc(78px + env(safe-area-inset-bottom, 0px)); }
+  .rn-pay { padding-bottom: calc(128px + env(safe-area-inset-bottom, 0px)); }
 }
